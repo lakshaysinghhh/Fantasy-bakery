@@ -1,5 +1,5 @@
 services:
-  # Backend Service
+  # Backend Service - Fixed deployment
   - type: web
     name: fantasy-bakery-backend
     env: node
