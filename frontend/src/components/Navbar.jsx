@@ -82,6 +82,13 @@ const Navbar = () => {
               )}
             </Link>
 
+            {/* My Orders - Only for authenticated users */}
+            {isAuthenticated && (
+              <Link to="/my-orders" className="text-gray-700 hover:text-black transition-colors">
+                <span className="text-lg">📦</span>
+              </Link>
+            )}
+
             {/* Auth */}
             {isAuthenticated ? (
               <>
@@ -144,6 +151,12 @@ const Navbar = () => {
             <Link to="/cart" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">
               Cart ({cartItemCount})
             </Link>
+
+            {isAuthenticated && (
+              <Link to="/my-orders" onClick={() => setIsMobileMenuOpen(false)} className="mobile-link">
+                My Orders
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <>
