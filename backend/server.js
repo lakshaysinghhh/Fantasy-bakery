@@ -19,13 +19,32 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ✅ CORS (production ready)
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://fantasy-bakery.onrender.com"
-  ],
+const corsOptions = {
   credentials: true,
-}));
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Allowed origins for development and production
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://fantasy-bakery.onrender.com'
+    ];
+    
+    if (process.env.CLIENT_URL) {
+      allowedOrigins.push(process.env.CLIENT_URL);
+    }
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
+import api from "../utils/api";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 
@@ -16,9 +16,7 @@ const MyOrders = () => {
 
     const fetchOrders = async () => {
       try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/orders/my`
-        );
+        const { data } = await api.get('/orders/my');
         setOrders(data);
       } catch (error) {
         toast.error("Failed to fetch orders");

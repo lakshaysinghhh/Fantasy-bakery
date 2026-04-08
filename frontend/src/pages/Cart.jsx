@@ -1,10 +1,9 @@
-import { motion } from "framer-motion";
-import { useCart } from "../context/CartContext";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import axios from "axios";
+import { useCart } from "../context/CartContext";
+import api from "../services/api";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { items, totalAmount, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -33,7 +32,7 @@ const Cart = () => {
 
     setIsCheckingOut(true);
     try {
-      await axios.post("http://localhost:5000/api/orders", {
+      await api.post("/orders", {
         items: items.map((i) => ({
           productId: i._id,
           name: i.name,

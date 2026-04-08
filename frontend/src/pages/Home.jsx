@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import ProductCard from "../components/ProductCard";
 import Hero from "../components/Hero";
 
@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await api.get("/products");
         setProducts(response.data);
         setError(null);
       } catch (error) {

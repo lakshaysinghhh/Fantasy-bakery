@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
-import axios from "axios";
+import api from "../services/api";
 
 const AuthContext = createContext();
 
@@ -48,7 +48,6 @@ export const AuthProvider = ({ children }) => {
     if (token && userData) {
       try {
         const user = JSON.parse(userData);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         dispatch({
           type: "LOGIN_SUCCESS",
@@ -65,16 +64,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/auth/login",
+      const { data } = await api.post(
+        "/auth/login",
         { email, password }
       );
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("userData", JSON.stringify(data));
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
-
+      
       dispatch({ type: "LOGIN_SUCCESS", payload: data });
       return data;
     } catch (err) {
@@ -84,16 +82,15 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/auth/signup",
+      const { data } = await api.post(
+        "/auth/signup",
         { name, email, password }
       );
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("userData", JSON.stringify(data));
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
-
+      
       dispatch({ type: "LOGIN_SUCCESS", payload: data });
       return data;
     } catch (err) {
@@ -103,7 +100,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.clear();
-    delete axios.defaults.headers.common["Authorization"];
+    delete api.defaults.headers.common["Authorization"];
     dispatch({ type: "LOGOUT" });
   };
 
