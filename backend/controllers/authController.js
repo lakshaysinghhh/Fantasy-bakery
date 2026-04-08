@@ -1,7 +1,10 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 
-const ADMIN_EMAIL = "lakshaysingh433433@gmail.com";
+const ADMIN_EMAILS = [
+  process.env.ADMIN_EMAIL_1 || "lakshaysingh433433@gmail.com",
+  process.env.ADMIN_EMAIL_2 || "adminadmin433@gmail.com"
+];
 
 // generate token
 const generateToken = (id) => {
@@ -14,6 +17,20 @@ const generateToken = (id) => {
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
+  // Basic validation
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Please provide name, email, and password" });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({ message: "Password must be at least 6 characters" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: "Please provide a valid email" });
+  }
+
   try {
     const userExists = await User.findOne({ email });
 
@@ -22,7 +39,7 @@ export const registerUser = async (req, res) => {
     }
 
     // 👇 auto admin
-    const isAdmin = email === ADMIN_EMAIL;
+    const isAdmin = ADMIN_EMAILS.includes(email);
 
     const user = await User.create({
       name,
@@ -30,8 +47,6 @@ export const registerUser = async (req, res) => {
       password,
       isAdmin,
     });
-
-    console.log(isAdmin ? "👑 Admin Registered:" : "🙂 User Registered:", email);
 
     res.status(201).json({
       _id: user._id,
@@ -58,22 +73,21 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+  // Basic validation
+  if (!email || !password) {
+    return res.status(400).json({ message: "Please provide email and password" });
+  }
+
   try {
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
 
       // 👇 force admin if email matches
-      if (email === ADMIN_EMAIL && !user.isAdmin) {
+      if (ADMIN_EMAILS.includes(email) && !user.isAdmin) {
         user.isAdmin = true;
         await user.save();
       }
-
-      console.log(
-        user.isAdmin
-          ? `👑 Admin Logged In: ${email}`
-          : `🙂 User Logged In: ${email}`
-      );
 
       res.json({
         _id: user._id,
@@ -102,6 +116,5 @@ export const loginUser = async (req, res) => {
 
 // LOGOUT
 export const logoutUser = async (req, res) => {
-  console.log("🔓 User Logged Out");
   res.json({ message: "Logged out successfully" });
 };

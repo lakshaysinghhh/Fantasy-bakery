@@ -1,0 +1,38 @@
+services:
+  # Backend Service
+  - type: web
+    name: fantasy-bakery-backend
+    env: node
+    buildCommand: "cd backend && npm install"
+    startCommand: "cd backend && npm start"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: CLIENT_URL
+        value: https://fantasy-bakery-frontend.onrender.com
+      - key: JWT_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: ADMIN_EMAIL_1
+        value: lakshaysingh433433@gmail.com
+      - key: ADMIN_EMAIL_2
+        value: adminadmin433@gmail.com
+
+  # Frontend Service
+  - type: web
+    name: fantasy-bakery-frontend
+    env: static
+    buildCommand: "cd frontend && npm install && npm run build"
+    publishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://fantasy-bakery-backend.onrender.com

@@ -17,8 +17,14 @@ export const addProduct = async (req, res) => {
   try {
     const { name, price, category, description, weights } = req.body;
 
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
+    // Basic validation
+    if (!name || !price || !category) {
+      return res.status(400).json({ message: "Please provide name, price, and category" });
+    }
+
+    if (price <= 0) {
+      return res.status(400).json({ message: "Price must be greater than 0" });
+    }
 
     const image = req.file
       ? req.file.path
@@ -35,10 +41,7 @@ export const addProduct = async (req, res) => {
       weights: weights ? JSON.parse(weights) : [],
     });
 
-    console.log(process.env.CLOUDINARY_API_KEY);
     const createdProduct = await product.save();
-
-    console.log(" Product Added:", name);
 
     res.status(201).json(createdProduct);
 
@@ -64,8 +67,6 @@ export const deleteProduct = async (req, res) => {
     }
 
     await product.deleteOne();
-
-    console.log("❌ Product Deleted:", product.name);
 
     res.json({ message: "Product removed" });
 
