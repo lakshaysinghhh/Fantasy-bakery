@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
+import api from "../services/api";
 import { showSuccess, showError, showLoading, showPromise } from "../utils/toast";
 
 const Admin = () => {
@@ -36,7 +36,7 @@ const Admin = () => {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/products");
+      const { data } = await api.get("/products");
       setProducts(data);
     } catch {
       showError("Products fetch failed");
@@ -45,7 +45,7 @@ const Admin = () => {
 
   const fetchOrders = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/orders");
+      const { data } = await api.get("/orders");
       setOrders(data);
     } catch {
       showError("Orders fetch failed");
@@ -54,7 +54,7 @@ const Admin = () => {
 
   const fetchArchivedOrders = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/orders/archived");
+      const { data } = await api.get("/orders/archived");
       setArchivedOrders(data);
     } catch {}
   };
@@ -119,7 +119,7 @@ const Admin = () => {
         console.log(key, value);
       }
 
-      await axios.post("http://localhost:5000/api/products", fd);
+      await api.post("/products", fd);
 
       showSuccess("Product added");
       setForm({ 
@@ -141,7 +141,7 @@ const Admin = () => {
   };
 
   const deleteProduct = (id) => {
-    const promise = axios.delete(`http://localhost:5000/api/products/${id}`);
+    const promise = api.delete(`/products/${id}`);
     showPromise(promise, {
       loading: "Deleting...",
       success: "Deleted",
@@ -150,18 +150,18 @@ const Admin = () => {
   };
 
   const updateOrderStatus = async (id, status) => {
-    await axios.put(`http://localhost:5000/api/orders/${id}`, { status });
+    await api.put(`/orders/${id}`, { status });
     fetchOrders();
   };
 
   const archiveOrder = async (id) => {
-    await axios.put(`http://localhost:5000/api/orders/${id}/archive`);
+    await api.put(`/orders/${id}/archive`);
     fetchOrders();
     fetchArchivedOrders();
   };
 
   const restoreOrder = async (id) => {
-    await axios.put(`http://localhost:5000/api/orders/${id}/restore`);
+    await api.put(`/orders/${id}/restore");
     fetchOrders();
     fetchArchivedOrders();
   };

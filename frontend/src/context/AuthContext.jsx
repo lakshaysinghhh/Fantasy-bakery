@@ -30,7 +30,10 @@ const authReducer = (state, action) => {
       };
 
     case "STOP_LOADING":
-      return { ...state, loading: false };
+      return {
+        ...state,
+        loading: false,
+      };
 
     default:
       return state;
