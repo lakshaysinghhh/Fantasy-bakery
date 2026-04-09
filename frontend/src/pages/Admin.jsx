@@ -161,7 +161,7 @@ const Admin = () => {
   };
 
   const restoreOrder = async (id) => {
-    await api.put(`/orders/${id}/restore");
+    await api.put(`/orders/${id}/restore`, null);
     fetchOrders();
     fetchArchivedOrders();
   };
