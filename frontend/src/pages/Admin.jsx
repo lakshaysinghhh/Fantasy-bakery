@@ -180,25 +180,21 @@ const Admin = () => {
 
       {/* HEADER */}
       <div className="max-w-7xl mx-auto mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
+        <h1 className={`text-2xl sm:text-3xl font-bold`}>Admin Dashboard</h1>
       </div>
 
       {/* TABS */}
       <div className="max-w-7xl mx-auto mb-6 flex gap-3">
         <button
           onClick={() => setActiveTab("products")}
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === "products" ? "bg-black text-white" : "bg-white border"
-          }`}
+          className={`px-4 py-2 rounded-lg ${activeTab === "products" ? "bg-black text-white" : "bg-white border"}`}
         >
           Products ({products.length})
         </button>
 
         <button
           onClick={() => setActiveTab("orders")}
-          className={`px-4 py-2 rounded-lg ${
-            activeTab === "orders" ? "bg-black text-white" : "bg-white border"
-          }`}
+          className={`px-4 py-2 rounded-lg ${activeTab === "orders" ? "bg-black text-white" : "bg-white border"}`}
         >
           Orders ({orders.length})
         </button>
