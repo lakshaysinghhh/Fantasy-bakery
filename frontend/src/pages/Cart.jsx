@@ -3,12 +3,23 @@ import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import api from "../services/api";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Cart = () => {
   const { items, totalAmount, removeFromCart, updateQuantity, clearCart } = useCart();
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // Safe checks to prevent white screen
+  if (!items || !Array.isArray(items)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2>Loading cart...</h2>
+        </div>
+      </div>
+    );
+  }
 
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
@@ -58,7 +69,7 @@ const Cart = () => {
   };
 
   // EMPTY CART
-  if (items.length === 0) {
+  if (!items || items.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 to-orange-50">
         <div className="text-center p-6">
